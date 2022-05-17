@@ -5,6 +5,11 @@
       "ProjectGuid": "cea546fa-387a-4022-ab11-f789bf98b019",
       "DisplayName": "edi_01",
       "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Прочие файлы",
+      "ColorIndex": -1
     }
   },
   "NextColorIndex": 1
