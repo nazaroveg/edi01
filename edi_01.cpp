@@ -3,10 +3,10 @@
 
  #include <iostream>
  #include <fstream>
- void plus(int*&, int);
- void minus(int*&, int);
+ void plus(int*, int);
+ void minus(int*, int);
  void fwrite(int*, int);
-
+ static int counter = 0; //счетчик записи
 int main()
 {
 	setlocale(LC_ALL, "RUS"); 
@@ -14,7 +14,7 @@ int main()
 	std::ifstream fin;
 	fin.open("in.txt");
 	if (fin.is_open())
-	{
+	{	
 		int one = 0;
 		fin >> one;
 		int* n =  new int[one]();
@@ -23,9 +23,7 @@ int main()
 		{
 			fin >> n[i];
 		}
-			plus(n, one);
 			
-		
 		    int two = 0;
 			fin >> two;
 			int* m = new int[two]();
@@ -34,12 +32,12 @@ int main()
 			{
 				fin >> m[i];
 			}
+			fin.close();
+			
+			plus(n, one);
 			minus(m, two);
 			fwrite(m, two);
 			fwrite(n, one);
-
-			fin.close();
-			
 
 		delete[]n;
 		delete[]m;
@@ -51,60 +49,70 @@ int main()
 	return 0;
 }
 
-void plus(int*& n, int one)
+void plus(int* n, int one)                
 {
-	int* tmp = new int[one];
+
 	int a = n[0];
-	
+
 	for (int i = 1; i < one; ++i)
 	{
-		
-		tmp[i-1] = n[i];
+		n[i-1] = n[i];
 	}
-	tmp[one - 1] = a;
-	
-
-
-	delete[]n;
-	n = tmp;
+	n[one-1] = a;
 
 }
-void minus(int*& m, int two)
+void minus(int* m, int two)
 {
-	int* tmp1 = new int[two];
 	int a = m[two-1];
 	
-	for (int i = 0; i < two-1; ++i)
+	for (int i = two-1; i>0; --i)
 	{
-
-		tmp1[i + 1] = m[i];
+		m[i] = m[i-1];
 	}
-	tmp1[0] = a;
-
-
-
-	delete[]m;
-	m = tmp1;
-
-
-
+	m[0] = a;
 }
 void fwrite(int* arr, int size)
 {
-	std::ofstream fout;
-	fout.open("out.txt", std::ios::app);
-	if (fout.is_open())
+	if (counter == 0)
 	{
-		fout << size << "\n";
-		for (int i = 0; i < size; ++i)
+		std::ofstream fout;
+		fout.open("out.txt");
+		if (fout.is_open())
 		{
-			fout << arr[i] << " ";
+			fout << size << "\n";
+			for (int i = 0; i < size; ++i)
+			{
+				fout << arr[i] << " ";
+			}
+			fout << "\n";
 		}
-		fout << "\n";
+		else
+		{
+			std::cerr << "ошибка! файл для записи не отрыт";
+		}
+		fout.close();
+		
 	}
+
 	else
 	{
-		std::cerr << "ошибка! файл для записи не отрыт";
+		std::ofstream fout;
+		fout.open("out.txt", std::ios::app);
+		if (fout.is_open())
+		{
+			fout << size << "\n";
+			for (int i = 0; i < size; ++i)
+			{
+				fout << arr[i] << " ";
+			}
+			fout << "\n";
+		}
+		else
+		{
+			std::cerr << "ошибка! файл для записи не отрыт";
+		}
+		fout.close();
+		
 	}
-	fout.close();
+	counter++;
 }
