@@ -3,37 +3,61 @@
 
  #include <iostream>
  #include <fstream>
+#include <string>
  void plus(int*, int);
  void minus(int*, int);
  void fwrite(int*, int);
  static int counter = 0; //счетчик записи
+
 int main()
 {
 	setlocale(LC_ALL, "RUS"); 
-
 	std::ifstream fin;
 	fin.open("in.txt");
 	if (fin.is_open())
 	{	
-		int one = 0;
-		fin >> one;
-		int* n =  new int[one]();
-		
-		for (int i = 0; i < one; ++i)
-		{
-			fin >> n[i];
-		}
-			
-		    int two = 0;
-			fin >> two;
-			int* m = new int[two]();
 
-			for (int i = 0; i < two; ++i)
+		int one = 0;
+		int two = 0;
+		
+		fin >> one;
+		int* n = new int[one]();
+		if (one > 0)
+		{
+			for (int i = 0; i < one; ++i)
 			{
-				fin >> m[i];
+				fin >> n[i];
 			}
+		}
+		else
+		{
+			delete[]n;
 			fin.close();
-			
+			std::cout << "размер массива не может быть меньше 1";
+			return 1;
+		}
+
+		fin >> two;
+		int* m = new int[two]();
+		
+		if (two > 0)
+		{
+			for (int j = 0; j < two; ++j)
+			{
+				fin >> m[j];
+			}
+		}
+		else
+		{
+			delete[]m;
+			fin.close();
+			std::cout << "размер массива не может быть меньше 1";
+			return 1;
+		}
+
+		fin.close();
+		
+		
 			plus(n, one);
 			minus(m, two);
 			fwrite(m, two);
@@ -45,6 +69,7 @@ int main()
 	else
 	{
 		std::cerr << "ошибка! файл не найден";
+		return 1;
 	}
 	return 0;
 }
@@ -89,6 +114,7 @@ void fwrite(int* arr, int size)
 		else
 		{
 			std::cerr << "ошибка! файл для записи не отрыт";
+			return;
 		}
 		fout.close();
 		
@@ -110,9 +136,12 @@ void fwrite(int* arr, int size)
 		else
 		{
 			std::cerr << "ошибка! файл для записи не отрыт";
+			return;
 		}
 		fout.close();
 		
 	}
 	counter++;
 }
+
+
