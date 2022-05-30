@@ -6,7 +6,7 @@
 #include <string>
  void plus(int*, int);
  void minus(int*, int);
- void fwrite(int*, int);
+ void fwrite(std::ofstream& fout, int*, int);
  static int counter = 0; //счетчик записи
 
 int main()
@@ -18,53 +18,68 @@ int main()
 	{	
 
 		int one = 0;
-		int two = 0;
-		
 		fin >> one;
-		int* n = new int[one]();
-		if (one > 0)
+
+		
+		if (one <= 0)
 		{
-			for (int i = 0; i < one; ++i)
-			{
-				fin >> n[i];
-			}
+			std::cout << "Ошибка: недопустимый размер первого массива " << one << '\n';
+			return -1;
+			
 		}
-		else
+		int* n = new int[one]();
+		if (n == nullptr)
 		{
-			delete[]n;
-			fin.close();
-			std::cout << "размер массива не может быть меньше 1";
-			return 1;
+			std::cout << "Ошибка: невозможно выделить массив, int размера " << one << '\n';
+			return -2;
+		}
+		for (int i = 0; i < one; ++i)
+		{
+				fin >> n[i];
 		}
 
+
+		int two = 0;
 		fin >> two;
-		int* m = new int[two]();
-		
-		if (two > 0)
+		if (one <= 0)
 		{
+			std::cout << "Ошибка: недопустимый размер второго массива  " << two << '\n';
+			return -3;
+
+		}
+
+		int* m = new int[two]();
+		if (m == nullptr)
+		{
+			std::cout << "Ошибка: невозможно выделить массив, int размера " << two << '\n';
+			return -4;
+		}
+
+		
 			for (int j = 0; j < two; ++j)
 			{
 				fin >> m[j];
 			}
-		}
-		else
-		{
-			delete[]m;
-			fin.close();
-			std::cout << "размер массива не может быть меньше 1";
-			return 1;
-		}
-
+		
 		fin.close();
 		
-		
+		   
 			plus(n, one);
 			minus(m, two);
-			fwrite(m, two);
-			fwrite(n, one);
+
+			std::ofstream fout;
+			fout.open("out.txt");
+			if (!fout.is_open()) {
+				std::cout << "Error: unable to open file " << "out.txt" << " for writing" << '\n';
+				return -5;
+			}
+			fwrite(fout, m, two);
+			fwrite(fout, n, one);
+			fout.close();
 
 		delete[]n;
 		delete[]m;
+
 	}
 	else
 	{
@@ -96,52 +111,17 @@ void minus(int* m, int two)
 	}
 	m[0] = a;
 }
-void fwrite(int* arr, int size)
+void fwrite(std::ofstream& fout, int* arr, int size)
 {
-	if (counter == 0)
+	fout << size << "\n";
+	for (int i = 0; i < size; ++i)
 	{
-		std::ofstream fout;
-		fout.open("out.txt");
-		if (fout.is_open())
-		{
-			fout << size << "\n";
-			for (int i = 0; i < size; ++i)
-			{
-				fout << arr[i] << " ";
-			}
-			fout << "\n";
-		}
-		else
-		{
-			std::cerr << "ошибка! файл для записи не отрыт";
-			return;
-		}
-		fout.close();
-		
+		fout << arr[i] << " ";
 	}
-
-	else
-	{
-		std::ofstream fout;
-		fout.open("out.txt", std::ios::app);
-		if (fout.is_open())
-		{
-			fout << size << "\n";
-			for (int i = 0; i < size; ++i)
-			{
-				fout << arr[i] << " ";
-			}
-			fout << "\n";
-		}
-		else
-		{
-			std::cerr << "ошибка! файл для записи не отрыт";
-			return;
-		}
-		fout.close();
-		
-	}
-	counter++;
+	fout << "\n";
 }
+	
+
+	
 
 
